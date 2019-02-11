@@ -1,12 +1,12 @@
 package pages;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import utils.DateAndTimeHelper;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class MakeAppointmentTest extends SeleniumTest {
     HomePage homePage;
@@ -34,46 +34,71 @@ public class MakeAppointmentTest extends SeleniumTest {
 
     @Test
     public void makeApptHappyPathTest(){
-        makeApptPage.selectFacilityByText("Hongkong CURA Healthcare Center");
+        String facility = "Hongkong CURA Healthcare Center";
+        makeApptPage.selectFacilityByText(facility);
         makeApptPage.checkMedicaidRadio();
 
         //book an appointment 10 days from now
-        makeApptPage.enterVisitDate(dtHelper.getFutureDaysInString(10));
+        String visitDate = dtHelper.getPastDaysInString(10);
+        makeApptPage.enterVisitDate(visitDate);
         makeApptPage.enterComment("book me in for the future");
 
         confirmationPage = makeApptPage.submit();
         assertTrue(confirmationPage.isInitialized());
-        assertEquals(confirmationPage.getConfirmationText(), "Appointment Confirmation");
-
+        validateConfirmationTest(facility, "Medicaid", visitDate);
     }
 
     @Test
     public void makeApptInThePastTest(){
-        makeApptPage.selectFacilityByText("Tokyo CURA Healthcare Center");
+        String facility = "Tokyo CURA Healthcare Center";
+        makeApptPage.selectFacilityByText(facility);
         makeApptPage.checkMedicareRadio();
 
         //book an appointment 10 days in the past
-        DateAndTimeHelper dtHelper = new DateAndTimeHelper();
-        makeApptPage.enterVisitDate(dtHelper.getPastDaysInString(10));
+        String visitDate = dtHelper.getPastDaysInString(10);
+        makeApptPage.enterVisitDate(visitDate);
         makeApptPage.enterComment("book me in for the past");
 
         confirmationPage = makeApptPage.submit();
         assertTrue(confirmationPage.isInitialized());
-        assertEquals(confirmationPage.getConfirmationText(), "Appointment Confirmation");
+        validateConfirmationTest(facility, "Medicare", visitDate);
+    }
+
+    @Test
+    public void makeApptWithNoDateTest(){
+        makeApptPage.selectFacilityByText("Tokyo CURA Healthcare Center");
+        makeApptPage.checkMedicareRadio();
+        makeApptPage.enterComment("book me in for the past");
+
+        try {
+            confirmationPage = makeApptPage.submit();
+            assertFalse(confirmationPage.isInitialized());
+        } catch(NoSuchElementException e) {
+            System.err.println("----- Cannot initialize the Appointment Confirmation page.");
+        }
     }
 
     @Test
     public void makeApptFunkyCharactersInCommentTest(){
-        makeApptPage.selectFacilityByText("Seoul CURA Healthcare Center");
+        String facility = "Seoul CURA Healthcare Center";
+        makeApptPage.selectFacilityByText(facility);
         makeApptPage.checkNoneRadio();
 
         //book an appointment 12 days from now
-        makeApptPage.enterVisitDate(dtHelper.getPastDaysInString(12));
+        String visitDate = dtHelper.getPastDaysInString(12);
+        makeApptPage.enterVisitDate(visitDate);
         makeApptPage.enterComment("book me #$%^$^&%&%^*^*^*^*$@:");
 
         confirmationPage = makeApptPage.submit();
         assertTrue(confirmationPage.isInitialized());
+        validateConfirmationTest(facility, "None", visitDate);
+    }
+
+    public void validateConfirmationTest(String facility, String program, String date){
         assertEquals(confirmationPage.getConfirmationText(), "Appointment Confirmation");
+        assertEquals(confirmationPage.getFacilityText(), facility);
+        assertEquals(confirmationPage.getProgramText(), program);
+        assertEquals(confirmationPage.getVisitDateText(), date);
     }
 
     @AfterMethod

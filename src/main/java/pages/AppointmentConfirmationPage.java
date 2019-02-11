@@ -8,13 +8,25 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class AppointmentConfirmationPage extends PageObject {
 
-    @FindBy(xpath ="//div[@class='container']//h2")
+    @FindBy(xpath = "//div[@class='container']//h2")
     private WebElement confirmText;
 
-    @FindBy(xpath ="//a[@id='menu-toggle']")
+    @FindBy(xpath = "//a[contains(text(),'Go to Homepage')]")
+    private WebElement goToHomeBtn;
+
+    @FindBy(xpath = "//p[@id='facility']")
+    private WebElement facility;
+
+    @FindBy(xpath = "//p[@id='program']")
+    private WebElement program;
+
+    @FindBy(xpath = "//p[@id='visit_date']")
+    private WebElement visit_date;
+
+    @FindBy(xpath = "//a[@id='menu-toggle']")
     private WebElement menuBtn;
 
-    @FindBy(xpath ="//a[contains(text(),'Logout')]")
+    @FindBy(xpath = "//a[contains(text(),'Logout')]")
     private WebElement logoutBtn;
 
     public AppointmentConfirmationPage(WebDriver driver) {
@@ -22,17 +34,29 @@ public class AppointmentConfirmationPage extends PageObject {
     }
 
     public boolean isInitialized() {
-        return confirmText.isDisplayed();
+        return goToHomeBtn.isDisplayed();
     }
 
-    public String getConfirmationText(){
+    public String getConfirmationText() {
         return confirmText.getText();
     }
 
-    public void logout(){
+    public String getFacilityText() {
+        return facility.getText();
+    }
+
+    public String getProgramText() {
+        return program.getText();
+    }
+
+    public String getVisitDateText() {
+        return visit_date.getText();
+    }
+
+    public void logout() {
         menuBtn.click();
         if (!logoutBtn.isDisplayed()) {
-            WebDriverWait wait = new WebDriverWait(driver,5);
+            WebDriverWait wait = new WebDriverWait(driver, 5);
             wait.until(ExpectedConditions.visibilityOf(logoutBtn));
         }
         logoutBtn.click();

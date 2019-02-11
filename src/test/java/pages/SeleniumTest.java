@@ -35,6 +35,13 @@ public class SeleniumTest {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
+//    @BeforeClass
+//    public static void setUp() {
+//        System.out.println("Called openBrowser");
+//        driver = new ChromeDriver();
+//        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//    }
+
     @AfterMethod
     public void cleanUp() {
         driver.manage().deleteAllCookies();
