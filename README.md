@@ -38,5 +38,5 @@
    3. Right click on the file name and choose `Run <path to test_across_browsers.xml>`
    4. Test result is showed as below:
    
-        ![Screenshot](images/testResult.jpg)
+        ![Screenshot](images/testResult.jpg?raw=true)
 
