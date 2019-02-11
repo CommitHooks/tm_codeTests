@@ -2,7 +2,7 @@
 
 ### Prerequisites
 
-- Intellij IDE
+- IntelliJ IDE
 - Java 1.8
 - Gradle 4.8
 - The following web drivers have been installed
@@ -33,6 +33,10 @@
 
  ## Run the tests
 
-   1. Under `src/test`, find the file called `test_across_browsers.xml`
-   2. Right click on the file name and choose `Run <path to test_across_browsers.xml>`
+   1. Import tm_codeTests as a gradle project to IntelliJ
+   2. Under `src/test`, find the file called `test_across_browsers.xml`
+   3. Right click on the file name and choose `Run <path to test_across_browsers.xml>`
+   4. Test result is showed as below:
+   
+        ![Screenshot](images/testResult.jpg)
 
